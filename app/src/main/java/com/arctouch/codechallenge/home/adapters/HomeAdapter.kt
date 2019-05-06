@@ -3,7 +3,10 @@ package com.arctouch.codechallenge.home.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import com.arctouch.codechallenge.R
+import com.arctouch.codechallenge.home.fragments.MovieListFragment
+import com.arctouch.codechallenge.home.fragments.MovieListFragmentDirections
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.util.MovieImageUrlBuilder
 import com.bumptech.glide.Glide
@@ -25,6 +28,11 @@ class HomeAdapter(private val movies: List<Movie>) : androidx.recyclerview.widge
                 .load(movie.posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
                 .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
                 .into(itemView.posterImageView)
+
+            val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(movie.id)
+            itemView.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(R.id.action_movieListFragment_to_movieDetailFragment, action.arguments)
+            )
         }
     }
 
