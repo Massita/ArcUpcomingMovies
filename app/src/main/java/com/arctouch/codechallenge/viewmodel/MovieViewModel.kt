@@ -9,17 +9,20 @@ import com.arctouch.codechallenge.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class MovieViewModel : ViewModel() {
+class MovieViewModel(private val api: TmdbApi, private val movieId: Int) : ViewModel() {
 
-    private val api: TmdbApi = TmdbApi.create()
     private var movie = MutableLiveData<Movie>()
+
+    init {
+        loadMovieDetails()
+    }
 
     fun getMovie() : LiveData<Movie> {
         return movie
     }
 
-    fun loadMovieDetails(movieId: Long) {
-        api.movie(movieId, TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
+    private fun loadMovieDetails() {
+        api.movie(movieId.toLong(), TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
