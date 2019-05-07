@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.home.fragments.MovieListFragment
 import com.arctouch.codechallenge.home.fragments.MovieListFragmentDirections
@@ -13,7 +15,18 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class HomeAdapter(private val movies: List<Movie>) : androidx.recyclerview.widget.RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter : PagedListAdapter<Movie, HomeAdapter.ViewHolder>(diffCallback) {
+
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                    oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                    oldItem == newItem
+
+        }
+    }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
@@ -41,7 +54,8 @@ class HomeAdapter(private val movies: List<Movie>) : androidx.recyclerview.widge
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = movies.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(movies[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val movie = getItem(position)
+        movie?.let { holder.bind(it) }
+    }
 }
