@@ -58,7 +58,7 @@ class MovieDetailFragment : Fragment() {
                 .into(movieBackdropImage)
         movieOverview.text = movie.overview
         movieReleaseDate.text = movie.releaseDate
-        movieGenres.text = movie.genres.toString()
+        movieGenres.text = movie.genres?.joinToString(separator = ", ") { it.name }
     }
 
 }
